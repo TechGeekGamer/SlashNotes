@@ -100,6 +100,8 @@ const commands = [
         reject(new Error(`401: Make sure you provided the correct token.`))
       return r.json()
     }).then(commands => {
+        console.log("Registered commands. May take up to an hour to appear in all guilds. Make sure to authorize the application using the applications.commands scope.")
+        console.log(`Invite: https://discord.com/oauth2/authorize?client_id=${app.application_id}&scope=bot%20applications.commands`)
         let commandConfig = {}
         commands.forEach((cmd, i) => {
             commandConfig[cmd.name] = cmd.id
