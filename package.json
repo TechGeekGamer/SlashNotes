@@ -1,0 +1,26 @@
+{
+  "name": "slashnotes",
+  "version": "1.0.0",
+  "description": "Take notes using Discord's slash commands",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TechGeekGamer/SlashNotes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TechGeekGamer/SlashNotes/issues"
+  },
+  "homepage": "https://github.com/TechGeekGamer/SlashNotes#readme",
+  "dependencies": {
+    "@keyv/sqlite": "^2.0.2",
+    "discord.js": "^12.5.1",
+    "keyv": "^4.0.3"
+  },
+  "devDependencies": {}
+}
