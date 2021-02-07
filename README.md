@@ -4,8 +4,9 @@ A Slash Commands bot that you can use to take notes via Discord's Slash Command 
 ## Setup
 
 1. Rename `clients.template.js` to `clients.js`
-2. In `clients.js`, fill out the `token` section
-3. Run `app.js`
+2. In `clients.js`, fill out the `token` section with your Discord bot token
+3. Run `npm i`
+4. Run `app.js`
 
 ## Commands
 **create**: Create a note
