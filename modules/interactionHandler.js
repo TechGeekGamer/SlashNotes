@@ -74,6 +74,8 @@ const guildNoteHandler = require("./guildNotesHandler")
  * @param {Discord.Client} client 
  */
 module.exports.interaction = function(payload = interactionTemplate, client){
+  if(!payload.guild_id)
+    return reply(payload, `🪚 Slash commands via DMs are currently not supported. Please check back later.`)
     try{
       console.log(commandIDs[payload.data.name] || "")
       console.log(payload.data.id)
