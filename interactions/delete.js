@@ -112,7 +112,7 @@ module.exports.execute = (payload, client) => {
         })
     }else if(notePublic == true){
         if(!payload.guild_id)
-            return respond(payload, `🏠 This feature is only available in servers.`)
+            return respond(payload, `🏠 This feature is only available in servers.`, 64, 2, client)
         if(notePublic == true && (payload.member.permissions & 0x00000020) != 0x00000020)
             return respond(payload, `⚠️ Invalid permissions.\nSorry, you need to have Manage Server permission to delete a server slash note.`, 64, 2, client)
         ack(payload).then(() => {
