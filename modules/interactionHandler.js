@@ -74,8 +74,6 @@ const guildNoteHandler = require("./guildNotesHandler")
  * @param {Discord.Client} client 
  */
 module.exports.interaction = function(payload = interactionTemplate, client){
-  if(!payload.guild_id)
-    return reply(payload, `🪚 Slash commands via DMs are currently not supported. Please check back later.`)
     try{
       console.log(commandIDs[payload.data.name] || "")
       console.log(payload.data.id)
@@ -83,7 +81,6 @@ module.exports.interaction = function(payload = interactionTemplate, client){
       if((commandIDs[payload.data.name] || "") != payload.data.id){
         return guildNoteHandler.interaction(payload, client)
       }
-      let author = payload.member.user.id
       let interaction = require(`../interactions/${payload.data.name}`)
 
       if (!cooldowns.has(interaction.info.name)) {
@@ -94,8 +91,8 @@ module.exports.interaction = function(payload = interactionTemplate, client){
       const timestamps = cooldowns.get(interaction.info.name);
       const cooldownAmount = (interaction.info.cooldown || 3) * 1000;
     
-      if (timestamps.has(payload.member.user.id)) {
-        const expirationTime = timestamps.get(payload.member.user.id) + cooldownAmount;
+      if (timestamps.has(payload.member?payload.member.user.id:payload.user.id)) {
+        const expirationTime = timestamps.get(payload.member?payload.member.user.id:payload.user.id) + cooldownAmount;
     
         if (now < expirationTime) {
           const timeLeft = (expirationTime - now) / 1000;
@@ -103,8 +100,8 @@ module.exports.interaction = function(payload = interactionTemplate, client){
         }
       }
     
-      timestamps.set(payload.member.user.id, now);
-      setTimeout(() => timestamps.delete(payload.member.user.id), cooldownAmount);
+      timestamps.set(payload.member?payload.member.user.id:payload.user.id, now);
+      setTimeout(() => timestamps.delete(payload.member?payload.member.user.id:payload.user.id), cooldownAmount);
 
       interaction.execute(payload, client)
     }catch(err){

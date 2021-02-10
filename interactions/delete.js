@@ -59,7 +59,7 @@ module.exports.execute = (payload, client) => {
     const noteTitle = payload.data.options[0].value
     const notePublic = payload.data.options[1].value
     if(notePublic == false){
-        databaseHandler.get("notes", `${payload.member.user.id}`).then((notes = []) => {
+        databaseHandler.get("notes", `${payload.member?payload.member.user.id:payload.user.id}`).then((notes = []) => {
             if(notes.length == 0)
                 return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
                     method:"POST",
@@ -77,7 +77,7 @@ module.exports.execute = (payload, client) => {
             notes.forEach((note, i) => {
                 if(note.title == noteTitle){
                     notes.splice(i, 1)
-                    databaseHandler.set("notes", `${payload.member.user.id}`, notes).then(() => {
+                    databaseHandler.set("notes", `${payload.member?payload.member.user.id:payload.user.id}`, notes).then(() => {
                         return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
                             method:"POST",
                             headers:{
@@ -111,6 +111,8 @@ module.exports.execute = (payload, client) => {
             });
         })
     }else if(notePublic == true){
+        if(!payload.guild_id)
+            return respond(payload, `🏠 This feature is only available in servers.`)
         if(notePublic == true && (payload.member.permissions & 0x00000020) != 0x00000020)
             return respond(payload, `⚠️ Invalid permissions.\nSorry, you need to have Manage Server permission to delete a server slash note.`, 64, 2, client)
         ack(payload).then(() => {
@@ -147,3 +149,4 @@ module.exports.info = {
     about:"Delete a note",
     cooldown:10
 }
+

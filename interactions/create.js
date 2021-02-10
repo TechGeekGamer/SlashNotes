@@ -66,6 +66,8 @@ module.exports.execute = (payload, client) => {
     const noteTitle = payload.data.options[0]["value"]
     const noteContent = payload.data.options[1]["value"]
     const publicNote = payload.data.options[2]["value"]
+    if(publicNote == true && !payload.guild_id)
+        return respond(payload, `🏠 This feature is only available in servers.`)
     if(publicNote == true && (payload.member.permissions & 0x00000020) != 0x00000020)
         return respond(payload, `⚠️ Invalid permissions.\nSorry, you need to have Manage Server permission to create a server slash note.`, 64, 2, client)
     if(noteContent.length > 2000)
@@ -81,14 +83,14 @@ module.exports.execute = (payload, client) => {
         const notePayload = {
             title:noteTitle,
             content:noteContent,
-            author:payload.member.user.id
+            author:payload.member?payload.member.user.id:payload.user.id
         }
         if(publicNote != true){
-            databaseHandler.get("notes", `${payload.member.user.id}`).then((notes = []) => {
+            databaseHandler.get("notes", `${payload.member?payload.member.user.id:payload.user.id}`).then((notes = []) => {
                 if(notes.filter(n => n.title == notePayload.title).length > 0)
                     return respond(payload, `❌ You already have a note with that name. To reuse this name, delete the old note that has this name, then try again.`, 64, 2, client)
                 notes.push(notePayload)
-                databaseHandler.set("notes", `${payload.member.user.id}`, notes).then(() => {
+                databaseHandler.set("notes", `${payload.member?payload.member.user.id:payload.user.id}`, notes).then(() => {
                     return respond(payload, `✅ Created note!`, 64, 2, client)
                 })
             })

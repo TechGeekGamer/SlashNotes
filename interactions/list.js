@@ -14,9 +14,9 @@ module.exports.execute = (payload) => {
     const notePayload = {
         title:"",
         content:"",
-        author:payload.member.user.id
+        author:payload.member?payload.member.user.id:payload.user.id
     }
-    databaseHandler.get("notes", `${payload.member.user.id}`).then((notes = []) => {
+    databaseHandler.get("notes", `${payload.member?payload.member.user.id:payload.user.id}`).then((notes = []) => {
         if(notes.length <= 0){
             return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
                 method:"POST",
