@@ -14,9 +14,9 @@ module.exports.execute = (payload) => {
     const notePayload = {
         title:"",
         content:"",
-        author:payload.member?(payload.memberr?payload.member.user:payload.user).id:payload.user.id
+        author:payload.member?(payload.member?payload.member.user:payload.user).id:payload.user.id
     }
-    databaseHandler.get("notes", `${payload.member?(payload.memberr?payload.member.user:payload.user).id:payload.user.id}`).then((notes = []) => {
+    databaseHandler.get("notes", `${payload.member?(payload.member?payload.member.user:payload.user).id:payload.user.id}`).then((notes = []) => {
         if(notes.length <= 0){
             return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
                 method:"POST",
@@ -44,7 +44,7 @@ module.exports.execute = (payload) => {
             body:JSON.stringify({
                 "type": 2,
                 "data": {
-                    "content": `${(payload.memberr?payload.member.user:payload.user).username}#${(payload.memberr?payload.member.user:payload.user).discriminator}'s notes:\n\n${list.join("\n")}`,
+                    "content": `${(payload.member?payload.member.user:payload.user).username}#${(payload.member?payload.member.user:payload.user).discriminator}'s notes:\n\n${list.join("\n")}`,
                     flags:64
                 }
             })
