@@ -102,9 +102,6 @@ const guildNoteHandler = require("./guildNotesHandler")
  */
 module.exports.interaction = function(payload = interactionTemplate, client){
     try{
-      console.log(commandIDs[payload.data.name] || "")
-      console.log(payload.data.id)
-      console.log("======")
       if((commandIDs[payload.data.name] || "") != payload.data.id){
         return guildNoteHandler.interaction(payload, client)
       }
