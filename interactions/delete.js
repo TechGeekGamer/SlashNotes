@@ -134,9 +134,6 @@ module.exports.execute = (payload, client) => {
                                 return respond(payload, `Successfully deleted slash server note.`, undefined, 4, client)
                             })
                         })
-                    }else
-                    if(i+1 == Object.keys(notes).length){
-                        return  respond(payload, `🔎 📝 Unable to find that note. Please make sure you have the correct spelling.`, undefined, 4, client)
                     }
                 });
             })
