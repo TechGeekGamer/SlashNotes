@@ -64,6 +64,8 @@ module.exports.execute = (payload, client) => {
 
         }
     }
+    helpMenuTop = []
+    helpMenuMain = []
 }
 
 module.exports.info = {
