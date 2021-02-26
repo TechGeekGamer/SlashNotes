@@ -1,10 +1,5 @@
-const Interaction = require("./modules/interactions")
-const config = require("./config.json")
 const {writeFileSync, existsSync} = require("fs")
-
-const app = new Interaction()
-app.setApplicationID(config.applicationID)
-app.setBotToken(config.token)
+const Interaction = require("./modules/interactions")
 const commands = [
     {
       name: 'create',
@@ -92,6 +87,11 @@ const commands = [
   module.exports = new Promise((resolve, reject) => {
     if(!existsSync("./setup/config.json"))
         return reject(new Error("Please setup the config.json file in setup/"))
+    const config = require("./config.json")
+      
+    const app = new Interaction()
+    app.setApplicationID(config.applicationID)
+    app.setBotToken(config.token)
     if(existsSync("./setup.flag"))
         return resolve(true)
     console.log("Setup in progress...")
