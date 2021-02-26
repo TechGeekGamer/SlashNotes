@@ -1,3 +1,30 @@
+//WIP
+class interactionTemplateNew {
+  constructor(){
+    this.version = Number;
+    this.type = Number;
+    this.token = String;
+    this.member = {
+      user: {
+        username: String,
+        public_flags: Number,
+        id:String,
+        discriminator: String,
+        avatar:String
+      },
+      roles: Array,
+      premium_since: null,
+      permissions: String,
+      pending: false,
+      nick: null,
+      mute: false,
+      joined_at: '0',
+      is_pending: false,
+      deaf: false
+    }
+  }
+}
+
 const interactionTemplate = {
     version: 1,
     type: 2,
