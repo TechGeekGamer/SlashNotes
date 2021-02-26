@@ -15,6 +15,8 @@ helpMenuTop.push(`**SlashNotes**`, `[Support Server](<https://discord.gg/eP8ab7w
  * @param {interactionTemplate} payload 
  */
 module.exports.execute = (payload, client) => {
+    if(payload.guild_id && (process.env.GUILDS_noModPermissionRequiredCreateNote || []).includes(payload.guild_id))
+        helpMenuMain.push("⚠️ This server has special permissions related to creating notes. All members are able to create Server Slash Notes regardless of permissions. If you believe this is a mistake, please contact the bot support server.")
     if(!payload.data.options){
         return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
             method:"POST",
