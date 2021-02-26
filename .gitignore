@@ -4,3 +4,4 @@ data/
 config.json
 setup.flag
 .DS_Store
+.env
