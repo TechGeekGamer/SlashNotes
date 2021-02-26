@@ -68,7 +68,7 @@ module.exports.execute = (payload, client) => {
     const publicNote = payload.data.options[2]["value"]
     if(publicNote == true && !payload.guild_id)
         return respond(payload, `🏠 This feature is only available in servers.`, 64, 2, client)
-    if(publicNote == true && (payload.member.permissions & 0x00000020) != 0x00000020)
+    if(publicNote == true && (payload.member.permissions & 0x00000020) != 0x00000020 && !(process.env.GUILDS_noModPermissionRequiredCreateNote || []).includes(payload.guild_id))
         return respond(payload, `⚠️ Invalid permissions.\nSorry, you need to have Manage Server permission to create a server slash note.`, 64, 2, client)
     if(noteContent.length > 2000)
         return respond(payload, `❌ Sorry, the content of a note can only be up to 2000 characters.`, 64, 2, client)
