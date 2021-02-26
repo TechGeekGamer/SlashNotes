@@ -1,3 +1,4 @@
+require("dotenv").config()
 const {readdirSync} = require('fs')
 
 require("./setup/index").then(() => {
