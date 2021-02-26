@@ -18,7 +18,7 @@ module.exports.execute = (payload, client) => {
     if(payload.guild_id && (process.env.GUILDS_noModPermissionRequiredCreateNote || []).includes(payload.guild_id))
         helpMenuMain.push("\n⚠️ This server has special permissions related to creating notes. All members are able to create Server Slash Notes regardless of permissions. If you believe this is a mistake, please contact the bot support server.")
     if(!payload.data.options){
-        return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
+        fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
             method:"POST",
             headers:{
                 "Content-Type":"application/json"
@@ -30,11 +30,14 @@ module.exports.execute = (payload, client) => {
                 }
             })
         })
+        helpMenuTop = []
+        helpMenuMain = []
+        return;
     }else{
         try{
             if(!fs.existsSync("./interactions/"+payload.data.options[0].value+".js")){
                 let name = payload.data.options[0].value
-                return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
+                fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
                     method:"POST",
                     headers:{
                         "Content-Type":"application/json"
@@ -46,9 +49,12 @@ module.exports.execute = (payload, client) => {
                         }
                     })
                 })
+                helpMenuTop = []
+                helpMenuMain = []
+                return;
             }
             let interaction = require(`./${payload.data.options[0].value}`)
-            return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
+            fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
@@ -60,12 +66,13 @@ module.exports.execute = (payload, client) => {
                     }
                 })
             })
+            helpMenuTop = []
+            helpMenuMain = []
+            return;
         }catch(err){
 
         }
     }
-    helpMenuTop = []
-    helpMenuMain = []
 }
 
 module.exports.info = {
