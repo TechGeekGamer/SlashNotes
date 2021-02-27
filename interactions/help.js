@@ -20,8 +20,7 @@ module.exports.execute = (payload, client) => {
     helpMenuTop.push(`**SlashNotes**`, `[Support Server](<https://discord.gg/eP8ab7wsp4>)`, `[Invite](<https://discord.com/api/oauth2/authorize?client_id=799921906047647744&scope=bot%20applications.commands>)`, `[Privacy Policy](https://gist.github.com/TechGeekGamer/3a0bf5de34cb04018f205f55852cd5ba)`)
 
     //Notes
-    helpMenuMain.push(`\n**__Notes__**\n- The Manage Server permission is required to manage Server Slash notes. (Notes that can be seen by everyone in the server through the Slash Commands menu.)\n`)
-    helpMenuMain.push("- Due to Discord's limits on Slash Commands, you can only have up to 50 Server Slash notes.")
+    helpMenuMain.push(`\n**__Notes__**\n- The Manage Server permission is required to manage Server Slash notes. (Notes that can be seen by everyone in the server through the Slash Commands menu.)\n`, "- Due to Discord's limits on Slash Commands, you can only have up to 50 Server Slash notes.")
     
     if(payload.guild_id && (process.env.GUILDS_noModPermissionRequiredCreateNote || []).includes(payload.guild_id))
         helpMenuMain.push("\n⚠️ This server has special permissions related to creating notes. All members are able to create Server Slash Notes regardless of permissions. If you believe this is a mistake, please contact the bot support server.")
