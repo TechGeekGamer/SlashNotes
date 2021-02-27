@@ -3,7 +3,7 @@ const Interaction = require("./modules/interactions")
 const commands = [
     {
       name: 'create',
-      description: 'Create a note.',
+      description: 'SlashNotes: Create a note.',
       options: [
         {
           type: 3,
@@ -27,7 +27,7 @@ const commands = [
     },
     {
       name: 'view',
-      description: 'View a note you own. (Does not work for Server Slash notes)',
+      description: 'SlashNotes: View a note you own. (Does not work for Server Slash notes)',
       options: [
         {
           type: 3,
@@ -39,7 +39,7 @@ const commands = [
     },
     {
       name: 'delete',
-      description: 'Delete a note using its name.',
+      description: 'SlashNotes: Delete a note using its name.',
       options: [
         {
           type: 3,
@@ -57,11 +57,11 @@ const commands = [
     },
     {
       name: 'list',
-      description: 'View notes you own. (Does not work for Server Slash notes)',
+      description: 'SlashNotes: View notes you own. (Does not work for Server Slash notes)',
     },
     {
       name: 'help',
-      description: 'View all available commands or view information on a certain one.',
+      description: 'SlashNotes: View all available commands or view information on a certain one.',
       options: [
         {
           type: 3,
@@ -72,7 +72,7 @@ const commands = [
     },
     {
       name: 'post',
-      description: 'Share a note you own in the current channel. (Does not work for Server Slash notes)',
+      description: 'SlashNotes: Share a note you own in the current channel. (Does not work for Server Slash notes)',
       options: [
         {
           type: 3,
