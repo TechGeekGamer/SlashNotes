@@ -11,6 +11,9 @@ module.exports.execute = (payload, client) => {
         return new Promise((resolve, reject) => {
             let responsePayload = {
                 "type": 5,
+                data:{
+                    flags:64
+                }
             };
             fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
                 method:"POST",
@@ -47,14 +50,10 @@ module.exports.execute = (payload, client) => {
         databaseHandler.get("notes", `${payload.member?payload.member.user.id:payload.user.id}`).then((notes = []) => {
             if(notes.length == 0)
                 return sendMessage(`🔎 📝 You don't have any notes created.`)
-            notes.forEach((note, i) => {
-                if(note.title == payload.data.options[0]["value"]){
-                    return sendMessage(note.content)
-                }else
-                if(i+1 == notes.length){
-                    return sendMessage(`🔎 📝 Unable to find that note. Please make sure you have the correct spelling of the note name, and that it isn't a server slash note.`)
-                }
-            });
+            let thisNote = notes.find(note => note.title == payload.data.options[0]["value"]);
+            if(!thisNote)
+                return sendMessage(`🔎 📝 Unable to find that note. Please make sure you have the correct spelling of the note name, and that it isn't a server slash note.`)
+            return sendMessage(thisNote.content)
         })
     })
 }
