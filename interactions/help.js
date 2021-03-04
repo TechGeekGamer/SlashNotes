@@ -51,7 +51,7 @@ module.exports.execute = (payload, client) => {
         let helpMenuFooter = new Array()
 
         //Top Bar
-        helpMenuTop.push(`**SlashNotes**`, `[Support Server](<https://discord.gg/eP8ab7wsp4>)`, `[Invite](<https://discord.com/api/oauth2/authorize?client_id=799921906047647744&scope=bot%20applications.commands>)`, `[Privacy Policy](https://gist.github.com/TechGeekGamer/3a0bf5de34cb04018f205f55852cd5ba)`)
+        helpMenuTop.push(`**SlashNotes**`, `[Support Server](<https://discord.gg/eP8ab7wsp4>)`, `[Invite](<https://discord.com/api/oauth2/authorize?client_id=799921906047647744&scope=bot%20applications.commands>)`, `[Privacy Policy](https://gist.github.com/TechGeekGamer/3a0bf5de34cb04018f205f55852cd5ba)`, `[GitHub](https://github.com/TechGeekGamer/SlashNotes)`)
 
         //Command List
         require("../app").interactionCommands.forEach(c => helpMenuMain.push(`**${c.info.name}**: ${c.info.about}`))
@@ -60,7 +60,7 @@ module.exports.execute = (payload, client) => {
         helpMenuMain.push(`\n**__Notes__**\n- The Manage Server permission is required to manage Server Slash notes. (Notes that can be seen by everyone in the server through the Slash Commands menu.)\n`, "- Due to Discord's limits on Slash Commands, you can only have up to 100 Server Slash notes.")
 
         //Footer
-        helpMenuFooter.push(`Version ${require("../package.json").version} | Created by: TechGeekGamer#7205`)
+        helpMenuFooter.push(`Version ${require("../package.json").version} | Created by: **TechGeekGamer#7205**`)
         
 
         if(payload.guild_id && (process.env.GUILDS_noModPermissionRequiredCreateNote || []).includes(payload.guild_id))
@@ -71,13 +71,13 @@ module.exports.execute = (payload, client) => {
             try{
                 if(!fs.existsSync("./interactions/"+payload.data.options[0].value+".js")){
                     let name = payload.data.options[0].value
-                    return sendMessage(`${helpMenuTop.join(` | `)}\n\nName: ${name || "No name found."}\nAbout: Interaction does not exist. Make sure you have the correct spelling.\nCooldown: None`).then(() => {
+                    return sendMessage(`${helpMenuTop.join(` | `)}\n\nName: ${name || "No name found."}\nAbout: Interaction does not exist. Make sure you have the correct spelling.\nCooldown: None\n\n${helpMenuFooter.join(` | `)}`).then(() => {
                         helpMenuTop = []
                         helpMenuMain = []
                     })
                 }
                 let interaction = require(`./${payload.data.options[0].value}`)
-                return sendMessage(`${helpMenuTop.join(` | `)}\n\nName: ${interaction.info.name || "No name found."}\nAbout: ${interaction.info.about || "No information found."}\nCooldown: ${interaction.info.cooldown || "None"}`)
+                return sendMessage(`${helpMenuTop.join(` | `)}\n\nName: ${interaction.info.name || "No name found."}\nAbout: ${interaction.info.about || "No information found."}\nCooldown: ${interaction.info.cooldown || "None"} ${interaction.info.cooldown?interaction.info.cooldown == 1?`second`:`seconds`:``}\n\n${helpMenuFooter.join(` | `)}`)
             }catch(err){
                 console.error(err)
             }
