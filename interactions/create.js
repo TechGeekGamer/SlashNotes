@@ -53,7 +53,7 @@ module.exports.execute = (payload, client) => {
             return sendMessage(`⚠️ Invalid permissions.\nSorry, you need to have Manage Server permission to create a server slash note.`)
         if(noteContent.length > 2000)
             return sendMessage(`❌ Sorry, the content of a note can only be up to 2000 characters.`)
-        if(/^[\w-]{1,32}$/.test(noteTitle))
+        if(!/^[\w-]{1,32}$/.test(noteTitle))
             return sendMessage(`❌ Sorry, Your note title needs to be between 1 and 32 characters and can't contain spaces.`)
         if(noteTitle != noteTitle.toLowerCase())  
             return sendMessage(`❌ Sorry, the title of the note has to be all lowercase.`)
