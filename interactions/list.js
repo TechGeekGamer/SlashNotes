@@ -5,14 +5,11 @@ const interactionTemplate = require("../modules/interactionHandler").interaction
  * 
  * @param {interactionTemplate} payload 
  */
-module.exports.execute = (payload) => {
+module.exports.execute = (payload, client) => {
     function ack(){
         return new Promise((resolve, reject) => {
             let responsePayload = {
-                "type": 5,
-                data:{
-                    flags:64
-                }
+                "type": 5
             };
             fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
                 method:"POST",
@@ -29,6 +26,7 @@ module.exports.execute = (payload) => {
         return new Promise((resolve, reject) => {
             let responsePayload = {
                 "content": msg,
+                flags:64,
                 "allowed_mentions": {
                     "parse": []
                 }
