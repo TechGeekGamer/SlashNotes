@@ -1,6 +1,6 @@
 {
   "name": "slashnotes",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Take notes using Discord's slash commands",
   "main": "app.js",
   "scripts": {
