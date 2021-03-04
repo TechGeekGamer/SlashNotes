@@ -6,7 +6,7 @@ const interactionTemplate = require("../modules/interactionHandler").interaction
  * 
  * @param {interactionTemplate} payload 
  */
-module.exports.execute = (payload) => {
+module.exports.execute = (payload, client) => {
     function ack(){
         return new Promise((resolve, reject) => {
             let responsePayload = {
