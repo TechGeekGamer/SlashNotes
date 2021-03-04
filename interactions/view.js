@@ -7,66 +7,57 @@ const interactionTemplate = require("../modules/interactionHandler").interaction
  * @param {interactionTemplate} payload 
  */
 module.exports.execute = (payload) => {
-    var prevTime = new Date(2021,0,0,0,0);
-    var thisTime = new Date();
-    var diff = thisTime.getTime() - prevTime.getTime();
-    let note_id = diff
-    const notePayload = {
-        title:"",
-        content:"",
-        author:payload.member?payload.member.user.id:payload.user.id
-    }
-    databaseHandler.get("notes", `${payload.member?payload.member.user.id:payload.user.id}`).then((notes = []) => {
-        if(notes.length == 0)
-            return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
+    function ack(){
+        return new Promise((resolve, reject) => {
+            let responsePayload = {
+                "type": 5,
+                data:{
+                    flags:64
+                }
+            };
+            fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
                 },
-                body:JSON.stringify({
-                    "type": 2,
-                    "data": {
-                        "content": `🔎 📝 You don't have any notes created.`,
-                        flags:64
-                    }
-                })
+                body:JSON.stringify(responsePayload)
             })
-        notes.forEach((note, i) => {
-            if(note.title == payload.data.options[0]["value"]){
-                return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
-                    method:"POST",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify({
-                        "type": 2,
-                        "data": {
-                            "content": `${note.content}`,
-                            flags:64,
-                            allowed_mentions:{
-                                users:[],
-                                roles:[]
-                            }
-                        }
-                    })
-                })
-            }else
-            if(i+1 == notes.length){
-                return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
-                    method:"POST",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify({
-                        "type": 2,
-                        "data": {
-                            "content": `🔎 📝 Unable to find that note. Please make sure you have the correct spelling of the note name, and that it isn't a server slash note.`,
-                            flags:64
-                        }
-                    })
-                })
-            }
-        });
+            .then(resolve)
+            .catch(reject)
+        })
+    }
+    function sendMessage(msg){
+        return new Promise((resolve, reject) => {
+            let responsePayload = {
+                "content": msg,
+                "allowed_mentions": {
+                    "parse": []
+                }
+            };
+            fetch(`https://discord.com/api/v8/webhooks/${client.user.id}/${payload.token}`, {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(responsePayload)
+            })
+            .then(resolve)
+            .catch(reject)
+        })
+    }
+    ack().then(() => {
+        databaseHandler.get("notes", `${payload.member?payload.member.user.id:payload.user.id}`).then((notes = []) => {
+            if(notes.length == 0)
+                return sendMessage(`🔎 📝 You don't have any notes created.`)
+            notes.forEach((note, i) => {
+                if(note.title == payload.data.options[0]["value"]){
+                    return sendMessage(note.content)
+                }else
+                if(i+1 == notes.length){
+                    return sendMessage(`🔎 📝 Unable to find that note. Please make sure you have the correct spelling of the note name, and that it isn't a server slash note.`)
+                }
+            });
+        })
     })
 }
 
