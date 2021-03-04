@@ -1,53 +1,58 @@
 fetch = require("node-fetch")
 const databaseHandler = require("../modules/databaseHandler")
-
 const interactionTemplate = require("../modules/interactionHandler").interactionTemplate
 /**
  * 
  * @param {interactionTemplate} payload 
  */
 module.exports.execute = (payload) => {
-    var prevTime = new Date(2021,0,0,0,0);
-    var thisTime = new Date();
-    var diff = thisTime.getTime() - prevTime.getTime();
-    let note_id = diff
-    const notePayload = {
-        title:"",
-        content:"",
-        author:payload.member?(payload.member?payload.member.user:payload.user).id:payload.user.id
-    }
-    databaseHandler.get("notes", `${payload.member?(payload.member?payload.member.user:payload.user).id:payload.user.id}`).then((notes = []) => {
-        if(notes.length <= 0){
-            return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
+    function ack(){
+        return new Promise((resolve, reject) => {
+            let responsePayload = {
+                "type": 5,
+                data:{
+                    flags:64
+                }
+            };
+            fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
                 },
-                body:JSON.stringify({
-                    "type": 2,
-                    "data": {
-                        "content": `🔎 📝 You don't have any notes created.`,
-                        flags:64
-                    }
-                })
+                body:JSON.stringify(responsePayload)
             })
-        }
-        let list = []
-        notes.forEach((note, i) => {
-            list.push(`${i+1}: **${note.title}**`)
-        });
-        return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-                "type": 2,
-                "data": {
-                    "content": `${(payload.member?payload.member.user:payload.user).username}#${(payload.member?payload.member.user:payload.user).discriminator}'s notes:\n\n${list.join("\n")}`,
-                    flags:64
+            .then(resolve)
+            .catch(reject)
+        })
+    }
+    function sendMessage(msg){
+        return new Promise((resolve, reject) => {
+            let responsePayload = {
+                "content": msg,
+                "allowed_mentions": {
+                    "parse": []
                 }
+            };
+            fetch(`https://discord.com/api/v8/webhooks/${client.user.id}/${payload.token}`, {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(responsePayload)
             })
+            .then(resolve)
+            .catch(reject)
+        })
+    }
+    ack().then(() => {
+        databaseHandler.get("notes", `${payload.member?(payload.member?payload.member.user:payload.user).id:payload.user.id}`).then((notes = []) => {
+            if(notes.length <= 0)
+                return sendMessage(`🔎 📝 You don't have any notes created.`)
+            let list = []
+            notes.forEach((note, i) => {
+                list.push(`${i+1}: **${note.title}**`)
+            });
+            return sendMessage(`${(payload.member?payload.member.user:payload.user).username}#${(payload.member?payload.member.user:payload.user).discriminator}'s notes:\n\n${list.join("\n")}`)
         })
     })
 }
