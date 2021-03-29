@@ -9,7 +9,10 @@ module.exports.execute = (payload, client) => {
     function ack(){
         return new Promise((resolve, reject) => {
             let responsePayload = {
-                "type": 5
+                "type": 5,
+                "data":{
+                    flags:64
+                }
             };
             fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
                 method:"POST",
