@@ -8,11 +8,15 @@ const interactionTemplate = require("../modules/interactionHandler").interaction
  * @param {Discord.Client} client
  */
 module.exports.execute = (payload, client) => {
+    const noteTitle = payload.data.options[0]["value"]
+    const noteContent = payload.data.options[1]["value"]
+    const publicNote = payload.data.options[2]["value"]
     function ack(){
         return new Promise((resolve, reject) => {
             let responsePayload = {
                 "type": 5
             };
+            publicNote == false ? responsePayload.data = {flags:64} : undefined
             fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
                 method:"POST",
                 headers:{
@@ -32,6 +36,7 @@ module.exports.execute = (payload, client) => {
                     "parse": []
                 }
             };
+            publicNote == false ? responsePayload.flags = 64 : undefined
             fetch(`https://discord.com/api/v8/webhooks/${client.user.id}/${payload.token}`, {
                 method:"POST",
                 headers:{
@@ -43,9 +48,6 @@ module.exports.execute = (payload, client) => {
             .catch(reject)
         })
     }
-    const noteTitle = payload.data.options[0]["value"]
-    const noteContent = payload.data.options[1]["value"]
-    const publicNote = payload.data.options[2]["value"]
     ack().then(() => {
         if(publicNote == true && !payload.guild_id)
             return sendMessage(`🏠 This feature is only available in servers.`)

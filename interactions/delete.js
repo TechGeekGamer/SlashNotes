@@ -8,11 +8,14 @@ const interactionTemplate = require("../modules/interactionHandler").interaction
  * @param {interactionTemplate} payload 
  */
 module.exports.execute = (payload, client) => {
+    const noteTitle = payload.data.options[0].value
+    const notePublic = payload.data.options[1].value
     function ack(){
         return new Promise((resolve, reject) => {
             let responsePayload = {
                 "type": 5
             };
+            notePublic == false ? responsePayload.data = {flags:64} : undefined
             fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
                 method:"POST",
                 headers:{
@@ -32,6 +35,7 @@ module.exports.execute = (payload, client) => {
                     "parse": []
                 }
             };
+            notePublic == false ? responsePayload.flags = 64 : undefined
             fetch(`https://discord.com/api/v8/webhooks/${client.user.id}/${payload.token}`, {
                 method:"POST",
                 headers:{
@@ -44,8 +48,6 @@ module.exports.execute = (payload, client) => {
         })
     }
     ack().then(() => {
-        const noteTitle = payload.data.options[0].value
-        const notePublic = payload.data.options[1].value
         if(notePublic == false){
             databaseHandler.get("notes", `${payload.member?payload.member.user.id:payload.user.id}`).then((notes = []) => {
                 if(notes.length == 0)
