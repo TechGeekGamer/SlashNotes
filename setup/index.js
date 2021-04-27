@@ -99,13 +99,14 @@ const commands = [
       if(r.status == 401)
         reject(new Error(`401: Make sure you provided the correct token.`))
       return r.json()
-    }).then(commands => {
+    }).then((setupCommands) => {
+      console.log(setupCommands)
         console.log("Registered commands. May take up to an hour to appear in all guilds. Make sure to authorize the application using the applications.commands scope.")
         console.log(`Invite: https://discord.com/oauth2/authorize?client_id=${app.application_id}&scope=bot%20applications.commands`)
         let commandConfig = {}
-        commands.forEach((cmd, i) => {
+        setupCommands.forEach((cmd, i) => {
             commandConfig[cmd.name] = cmd.id
-            if(i+1 == commands.length){
+            if(i+1 == setupCommands.length){
                 writeFileSync("./setup.flag", "1")
                 writeFileSync("./config.json", JSON.stringify(commandConfig, null, 2))
                 console.log("Setup complete. Sending back to app.js...")
