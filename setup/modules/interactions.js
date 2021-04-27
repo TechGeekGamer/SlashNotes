@@ -173,7 +173,7 @@ function Interaction(name, description, options){
         return new Promise((resolve, reject) => {
             let payload = commands;
             if(this.options)payload["options"] = this.options
-            fetch(`${endpoints.discord_api}/applications/${this.application_id}${this.guild_id?`/guilds${this.guild_id}`:""}/commands${this.command_id?`/${this.command_id}`:""}`, {
+            fetch(`${endpoints.discord_api}/applications/${this.application_id}${this.guild_id?`/guilds/${this.guild_id}`:""}/commands${this.command_id?`/${this.command_id}`:""}`, {
                 method:"PUT",
                 headers:{
                     "Content-Type":"application/json",
