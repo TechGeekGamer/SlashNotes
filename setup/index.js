@@ -22,6 +22,12 @@ const commands = [
           name: 'public',
           description: "Have note appear in this server's slash commands menu? (Requires Manage Server permission)",
           required: true
+        },
+        {
+          type: 5,
+          name: 'ephemeral',
+          description: "(Server Slash Notes Only) When note is selected, only show it to the executor.",
+          required: false
         }
       ]
     },
