@@ -34,23 +34,27 @@ const Discord = require("discord.js")
  * @param {interactionTemplate} payload 
  * @param {String} message 
  */
-function reply(payload, message){
+function reply(payload, message, ephemeral){
+  const pl = {
+    "type": 4,
+    "data": {
+      "content": message,
+      allowed_mentions:{
+        users:[],
+        roles:[]
+      }
+    }
+  }
+
+  ephemeral?pl.data.flags = 64:undefined;
+
   return fetch(`https://discord.com/api/v8/interactions/${payload.id}/${payload.token}/callback`, {
     method:"POST",
     headers:{
         "Content-Type":"application/json"
     },
-    body:JSON.stringify({
-        "type": 4,
-        "data": {
-            "content": message,
-            allowed_mentions:{
-              users:[],
-              roles:[]
-          }
-        }
-    })
-})
+    body:JSON.stringify(pl)
+  })
 }
 
 let cooldowns = new Map()
@@ -76,7 +80,7 @@ module.exports.interaction = function(payload, client){
           let noteID = payload.data.id
           if(!guildNotes[noteID])
             return reply(payload, `😕 Sorry, that note could not be found. This shouldn't happen. Please contact the bot developer if it continues.`)
-          return reply(payload, guildNotes[noteID].content)
+          return reply(payload, guildNotes[noteID].content, guildNotes[noteID].ephemeral)
         })
     }catch(err){
       console.error(err)
