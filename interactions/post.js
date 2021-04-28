@@ -2,6 +2,7 @@ fetch = require("node-fetch")
 const databaseHandler = require("../modules/databaseHandler")
 
 const interactionTemplate = require("../modules/interactionHandler").interactionTemplate
+const GuildSettings = require("./settings").GuildSettings
 /**
  * 
  * @param {interactionTemplate} payload 
@@ -43,13 +44,18 @@ module.exports.execute = (payload, client) => {
         })
     }
     ack().then(() => {
-        databaseHandler.get("notes", `${payload.member?payload.member.user.id:payload.user.id}`).then((notes = []) => {
-            if(notes.length == 0)
-                return sendMessage(`🔎 📝 You don't have any notes created.`)
-            let thisNote = notes.find(note => note.title == payload.data.options[0]["value"]);
-            if(!thisNote)
-                return sendMessage(`🔎 📝 Unable to find that note. Please make sure you have the correct spelling of the note name, and that it isn't a server slash note.`)
-            return sendMessage(thisNote.content)
+        databaseHandler.get("guildSettings", (payload.guild_id || "DM")).then(gs => {
+            let guildSettings = new GuildSettings(gs)
+            if(guildSettings.post_command == false)
+                return sendMessage(`❌ Posting personal notes is disabled in this server.`)
+            databaseHandler.get("notes", `${payload.member?payload.member.user.id:payload.user.id}`).then((notes = []) => {
+                if(notes.length == 0)
+                    return sendMessage(`🔎 📝 You don't have any notes created.`)
+                let thisNote = notes.find(note => note.title == payload.data.options[0]["value"]);
+                if(!thisNote)
+                    return sendMessage(`🔎 📝 Unable to find that note. Please make sure you have the correct spelling of the note name, and that it isn't a server slash note.`)
+                return sendMessage(thisNote.content)
+            })
         })
     })
 }
