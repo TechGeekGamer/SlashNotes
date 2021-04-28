@@ -90,7 +90,8 @@ const commandIDs = {
   delete:config.delete,
   list:config.list,
   help:config.help,
-  post:config.post
+  post:config.post,
+  settings:config.settings
 }
 
 const guildNoteHandler = require("./guildNotesHandler")

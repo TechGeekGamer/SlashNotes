@@ -87,6 +87,18 @@ const commands = [
           required: true
         }
       ]
+    },
+    {
+      name: 'settings',
+      description: 'SlashNotes: Edit settings for SlashNotes in this server.',
+      options: [
+        {
+          type: 5,
+          name: 'post_command',
+          description: 'Allow the /post command to be used in this server.',
+          required: false
+        }
+      ]
     }
   ]
   

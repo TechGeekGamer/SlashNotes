@@ -30,14 +30,17 @@ function databaseError(error = "None provided.", databaseName = "None provided."
 
 //Load databases
 const notes = new Keyv(`sqlite://${resourceDir}/notes.sqlite`);
+const guildSettings = new Keyv(`sqlite://${resourceDir}/guildSettings.sqlite`);
 const internalStorage = new Keyv(`sqlite://${resourceDir}/internalStorage`);
 
 //Handle connection errors
 notes.on('error', err => databaseError(err, "notes", "load"));
+guildSettings.on('error', err => databaseError(err, "guildSettings", "load"));
 
 //Variables
 let directCallJson = {
-    notes:notes
+    notes:notes,
+    guildSettings:guildSettings
 }
 
 //Export
