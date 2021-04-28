@@ -70,6 +70,8 @@ module.exports.execute = (payload, client) => {
         }
         if(publicNote != true){
             databaseHandler.get("notes", `${payload.member?payload.member.user.id:payload.user.id}`).then((notes = []) => {
+                if(Object.keys(notes).length == 50)
+                    return sendMessage(`❌ You can only have up to 50 personal notes.`)
                 if(notes.filter(n => n.title == notePayload.title).length > 0)
                     return sendMessage(`❌ You already have a note with that name. To reuse this name, delete the old note that has this name, then try again.`)
                 notes.push(notePayload)
@@ -82,7 +84,7 @@ module.exports.execute = (payload, client) => {
                 if(notes[noteTitle])
                     return sendMessage(`❌ You already have a note with that name. To reuse this name, delete the old note that has this name, then try again.`)
                 if(Object.keys(notes).length == 100)
-                    return sendMessage(`❌ You have reached the`)
+                    return sendMessage(`❌ You have reached the maximum amount of server slash notes. (100)`)
                 fetch(`https://discord.com/api/v8/applications/${client.user.id}/guilds/${payload.guild_id}/commands`, {
                     method:"POST",
                     headers:{
@@ -119,5 +121,5 @@ module.exports.execute = (payload, client) => {
 module.exports.info = {
     name:"create",
     about:"Create a note",
-    cooldown:30
+    cooldown:10
 }
